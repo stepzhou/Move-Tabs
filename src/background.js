@@ -1,23 +1,24 @@
 chrome.commands.onCommand.addListener(function(command) {
+  var query = chrome.tabs.query;
   if (command == "move-tab-left") {
-    moveTab(-1);
+    moveTab(query, -1);
   }
   if (command == "move-tab-right") {
-    moveTab(1);
+    moveTab(query, 1);
   }
 });
 
-function moveTab(dir) {
-    chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+function moveTab(query, dir) {
+    query({currentWindow: true, active: true}, function(tabs){
       var current = tabs[0];
-      getNewPos(current.index, dir, function(newPos) {
+      getNewPos(query, current.index, dir, function(newPos) {
         chrome.tabs.move(current.id, {index: newPos});
       });
     });
 }
 
-function getNewPos(index, dir, callback) {
-  chrome.tabs.query({currentWindow: true}, function(tabs) {
+function getNewPos(query, index, dir, callback) {
+  query({currentWindow: true}, function(tabs) {
     var numTabs = tabs.length;
     var newPos = index + dir;
     if (newPos < 0) {

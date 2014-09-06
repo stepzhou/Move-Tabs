@@ -1,0 +1,11 @@
+{
+  "name": "move-tabs",
+  "version": "0.1.0",
+  "description": "Chrome extension that enables move tab shortcuts",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jasmine": "~2.0.3"
+  },
+  "author": "Stephen Zhou",
+}
