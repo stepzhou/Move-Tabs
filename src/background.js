@@ -11,14 +11,17 @@ chrome.commands.onCommand.addListener(function(command) {
 function moveTab(query, dir) {
     query({currentWindow: true, active: true}, function(tabs){
       var current = tabs[0];
-      getNewPos(query, current.index, dir, function(newPos) {
-        chrome.tabs.move(current.id, {index: newPos});
+      getNewPos(query, current.index, dir, function(error, newPos) {
+        if (!error && !current.pinned) {
+          chrome.tabs.move(current.id, {index: newPos});
+        }
       });
     });
 }
 
 function getNewPos(query, index, dir, callback) {
   query({currentWindow: true}, function(tabs) {
+    var error = null;
     var numTabs = tabs.length;
     var newPos = index + dir;
     if (newPos < 0) {
@@ -28,6 +31,28 @@ function getNewPos(query, index, dir, callback) {
       newPos = 0;
     }
 
-    callback(newPos);
+    if (tabs[newPos].pinned) {
+      newPos = getFirstUnpinnedPos(tabs, numTabs, newPos, dir);
+      if (tabs[newPos].pinned) {
+        error = new Error('Cannot move because all tabs are pinned');
+      }
+    }
+
+    callback(error, newPos);
   });
+}
+
+function getFirstUnpinnedPos(tabs, numTabs, index, dir) {
+  var firstUnpinnedPos = numTabs - 1;
+  if (dir == 1) {
+    var i;
+    for (i = 0; i < numTabs && i >= 0; i++) {
+      if (!tabs[i].pinned) {
+        firstUnpinnedPos = i;
+        break;
+      }
+    }
+  }
+
+  return firstUnpinnedPos;
 }
