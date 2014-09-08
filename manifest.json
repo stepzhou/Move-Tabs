@@ -7,7 +7,7 @@
 
   "background": {
     "persistent": false,
-    "scripts": ["src/background.js"]
+    "scripts": ["src/movetabs.js"]
   },
   "commands": {
     "move-tab-left": {

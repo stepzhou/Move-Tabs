@@ -32,7 +32,7 @@ function getNewPos(query, index, dir, callback) {
     }
 
     if (tabs[newPos].pinned) {
-      newPos = getFirstUnpinnedPos(tabs, numTabs, newPos, dir);
+      newPos = getFirstUnpinnedPos(tabs, numTabs, dir);
       if (tabs[newPos].pinned) {
         error = new Error('Cannot move because all tabs are pinned');
       }
@@ -42,7 +42,7 @@ function getNewPos(query, index, dir, callback) {
   });
 }
 
-function getFirstUnpinnedPos(tabs, numTabs, index, dir) {
+function getFirstUnpinnedPos(tabs, numTabs, dir) {
   var firstUnpinnedPos = numTabs - 1;
   if (dir == 1) {
     var i;
